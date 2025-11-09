@@ -1,0 +1,70 @@
+C51 COMPILER V9.60.7.0   UART                                                              10/06/2025 19:08:07 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN .\Objects\UART.obj
+COMPILER INVOKED BY: D:\Keil\C51\BIN\C51.EXE UART.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\UART.ls
+                    -t) OBJECT(.\Objects\UART.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          
+   3          //void UartInit(void)           //4800bps@11.0592MHz
+   4          //{
+   5          //      PCON |= 0x80;           //Enable SMOD bit
+   6          //      SCON = 0x50;            //8bit and variable baudrate
+   7          //      AUXR &= 0xBF;           //Timer1's clock is Fosc/12 (12T)
+   8          //      AUXR &= 0xFE;           //Use Timer1 as baudrate generator
+   9          //      TMOD &= 0x0F;           //Mask Timer1 mode bit
+  10          //      TMOD |= 0x20;           //Set Timer1 as 8-bit auto reload mode
+  11          //      TL1 = 0xF4;             //Initial timer value
+  12          //      TH1 = 0xF4;             //Set reload value
+  13          //      ET1 = 0;                //Disable Timer1 interrupt
+  14          //      TR1 = 1;                //Timer1 running
+  15          //}
+  16          
+  17          /**
+  18            * @brief 串口初始化，//4800bps@11.0592MHz
+  19            * @param  无
+  20            * @retval 无
+  21            */
+  22          void UART_Init()        
+  23          {
+  24   1              PCON |= 0x80;           //Enable SMOD bit
+  25   1              SCON=0X40;
+  26   1              TMOD&=0XF0; //把TMOD的低四位清零，高四位保持不变
+  27   1              TMOD|=0X20;
+  28   1              TL1 = 0xF4;             //Initial timer value
+  29   1              TH1 = 0xF4;             //Set reload value
+  30   1              ET1 = 0;                //Disable Timer1 interrupt
+  31   1              TR1 = 1;                //Timer1 running
+  32   1      }
+  33          
+  34          /**
+  35            * @brief 串口发送一个字节数据
+  36            * @param  Byte 要发送的一个字节数据
+  37            * @retval 无
+  38            */
+  39          void UART_SendByte(unsigned char Byte)
+  40          {
+  41   1              SBUF=Byte;
+  42   1              while(TI==0);
+  43   1              TI=0;
+  44   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     31    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V9.60.7.0   UART                                                              10/06/2025 19:08:07 PAGE 2   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

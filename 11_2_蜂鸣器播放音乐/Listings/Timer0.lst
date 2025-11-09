@@ -1,0 +1,71 @@
+C51 COMPILER V9.60.7.0   TIMER0                                                            10/25/2025 22:45:22 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE TIMER0
+OBJECT MODULE PLACED IN .\Objects\Timer0.obj
+COMPILER INVOKED BY: D:\Keil\C51\BIN\C51.EXE Timer0.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\Timer
+                    -0.lst) OBJECT(.\Objects\Timer0.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          
+   3          /**
+   4            * @brief 定时器0初始化，1ms@12.000MHz
+   5            * @param 无 
+   6            * @retval 无
+   7            */
+   8          void Timer0_Init() //1ms@12.000MHz
+   9          {
+  10   1      //void Timer0Init(void)         //1ms@12.000MHz
+  11   1      //{
+  12   1              //      AUXR &= 0x7F;           //Timer clock is 12T mode新版C52，老版不用
+  13   1      //      TMOD &= 0xF0;           //Set timer work mode
+  14   1      //      TMOD |= 0x01;           //Set timer work mode
+  15   1      //      TL0 = 0x18;             //Initial timer value
+  16   1      //      TH0 = 0xFC;             //Initial timer value
+  17   1      //      TF0 = 0;                //Clear TF0 flag
+  18   1      //      TR0 = 1;                //Timer0 start run
+  19   1      //}
+  20   1              //TMOD=0x01;   //0000 0001 不可位寻址
+  21   1              TMOD&=0XF0; //把TMOD的低四位清零，高四位保持不变
+  22   1              TMOD|=0X01; //把TMOD的最低位置1，高四位保持不变
+  23   1              TF0=0; //定时器T0溢出中断标志
+  24   1              TR0=1; //开始计数
+  25   1              TH0=64535/256;
+  26   1              TL0=64535%256+1;
+  27   1              ET0=1;  //      T0的溢出中断允许位//IE:中断允许寄存器
+  28   1              EA=1;   //CPU总中断允许控制位
+  29   1              PT0=0;  //IP：中断优先级控制寄存器
+  30   1      }
+  31          
+  32          /* 定时器中断函数模板
+  33          void Timer0_Routine() interrupt 1 //中断函数
+  34          {
+  35                  static unsigned int T0Count;    //static关键字让变量在结束后依然占据空间，且只可以由�
+             -�函数使用
+  36                  TH0=64535/256;//重装定时器
+  37                  TL0=64535%256+1;        
+  38                  T0Count++;
+  39                  if(T0Count>=1000)
+  40                  {
+  41                          T0Count=0;      
+  42                  }
+  43          }
+  44          */
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     23    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+C51 COMPILER V9.60.7.0   TIMER0                                                            10/25/2025 22:45:22 PAGE 2   
+
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
